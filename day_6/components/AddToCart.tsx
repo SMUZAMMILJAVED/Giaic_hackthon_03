@@ -1,5 +1,5 @@
 // components/AddToCart.tsx
-import React, { useState } from 'react';
+import React from 'react';
 import { FaTrash } from 'react-icons/fa';
 import Image from 'next/image';
 import { Product } from '../types/product';
