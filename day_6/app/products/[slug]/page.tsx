@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect,use } from 'react';
 import Image from 'next/image';
-import { FaEuroSign, FaTimes, FaTrash } from 'react-icons/fa';
+import { FaTimes, FaTrash } from 'react-icons/fa';
 import Link from 'next/link';
 import { groq } from 'next-sanity';
 import { client } from '@/sanity/lib/client';
@@ -36,13 +36,9 @@ async function getProduct(slug: string): Promise<Product | null> {
   );
 }
 
-// export default function ProductPage({ params }: ProductPageProps) {
-//   const [product, setProduct] = useState<Product | null>(null);
-//   const [cart, setCart] = useState<(Product & { quantity: number })[]>([]);
-//   const [isCartOpen, setIsCartOpen] = useState(false);
 export default function ProductPage({ params }: ProductPageProps) {
-  // Unwrap the params Promise using React.use()
-  const { slug } = use(params);
+  
+  const { slug }: { slug: string } = use(params);
   const [product, setProduct] = useState<Product | null>(null);
   const [cart, setCart] = useState<(Product & { quantity: number })[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
@@ -52,11 +48,7 @@ export default function ProductPage({ params }: ProductPageProps) {
       setProduct(fetchedProduct);
     };
 
-  // useEffect(() => {
-  //   const fetchProduct = async () => {
-  //     const fetchedProduct = await getProduct(params.slug);
-  //     setProduct(fetchedProduct);
-  //   };
+ 
 
     fetchProduct();
 
@@ -121,7 +113,8 @@ export default function ProductPage({ params }: ProductPageProps) {
   if (!product) {
     return (
       <div className="text-center py-12">
-        <h1 className="text-2xl font-bold">Product Not Found</h1>
+        {/* <h1 className="text-2xl font-bold">Product Not Found</h1> */}
+        <h1 className="text-2xl font-bold">Product Not Found&apos;s</h1>
         <Link href="/products" className="text-purple-500 hover:underline">
           ← Back to Products
         </Link>
