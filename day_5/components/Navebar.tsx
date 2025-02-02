@@ -65,16 +65,7 @@ const Navbar = () => {
               About
             </Link>
           </li>
-          <li className="text-center">
-            <Link href="/product" className="hover:underline">
-              Product
-            </Link>
-          </li>
-          <li className="text-center">
-            <Link href="/cart" className="hover:underline">
-              Cart
-            </Link>
-          </li>
+          
           
         </ul>
       </div>

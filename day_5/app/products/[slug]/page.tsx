@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect,use } from 'react';
 import Image from 'next/image';
 import { FaEuroSign, FaTimes, FaTrash } from 'react-icons/fa';
 import Link from 'next/link';
@@ -14,7 +14,7 @@ interface ProductPageProps {
 
 interface Product {
   _id: string;
-  title: string;
+  name: string;
   image: string;
   price: number;
   description: string;
@@ -26,7 +26,7 @@ async function getProduct(slug: string): Promise<Product | null> {
   return await client.fetch(
     groq`*[_type == "product" && slug.current == $slug][0]{
       _id,
-      title,
+      name,
       image,
       price,
       description,
@@ -36,16 +36,27 @@ async function getProduct(slug: string): Promise<Product | null> {
   );
 }
 
+// export default function ProductPage({ params }: ProductPageProps) {
+//   const [product, setProduct] = useState<Product | null>(null);
+//   const [cart, setCart] = useState<(Product & { quantity: number })[]>([]);
+//   const [isCartOpen, setIsCartOpen] = useState(false);
 export default function ProductPage({ params }: ProductPageProps) {
+  // Unwrap the params Promise using React.use()
+  const { slug } = use(params);
   const [product, setProduct] = useState<Product | null>(null);
   const [cart, setCart] = useState<(Product & { quantity: number })[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
-
   useEffect(() => {
     const fetchProduct = async () => {
-      const fetchedProduct = await getProduct(params.slug);
+      const fetchedProduct = await getProduct(slug); // Use the unwrapped slug
       setProduct(fetchedProduct);
     };
+
+  // useEffect(() => {
+  //   const fetchProduct = async () => {
+  //     const fetchedProduct = await getProduct(params.slug);
+  //     setProduct(fetchedProduct);
+  //   };
 
     fetchProduct();
 
@@ -53,7 +64,7 @@ export default function ProductPage({ params }: ProductPageProps) {
     if (savedCart) {
       setCart(JSON.parse(savedCart));
     }
-  }, [params.slug]);
+  }, [slug]);
 
   const updateCart = (updatedCart: (Product & { quantity: number })[]) => {
     setCart(updatedCart);
@@ -142,14 +153,14 @@ export default function ProductPage({ params }: ProductPageProps) {
                   {item.image && (
                     <Image
                       src={urlFor(item.image).width(50).height(50).url()} // Processing image URL
-                      alt={item.title}
+                      alt={item.name}
                       className="w-16 h-16 rounded-lg"
                       width={50}
                       height={50}
                     />
                   )}
                   <div className="ml-4">
-                    <h3 className="text-md font-semibold text-gray-800">{item.title}</h3>
+                    <h3 className="text-md font-semibold text-gray-800">{item.name}</h3>
                     <p className="text-sm text-purple-500">
                       ${item.price} x {item.quantity}
                     </p>
@@ -186,7 +197,7 @@ export default function ProductPage({ params }: ProductPageProps) {
         <div className="w-full lg:w-1/2 h-auto">
           <Image
             src={urlFor(product.image).width(600).height(530).url()}
-            alt={product.title}
+            alt={product.name}
             width={600}
             height={530}
             className="object-cover w-full h-auto lg:h-[530px]"
@@ -197,7 +208,7 @@ export default function ProductPage({ params }: ProductPageProps) {
         <div className="w-full lg:w-1/2 flex flex-col justify-between p-4 lg:p-6">
           <div className="flex flex-col justify-between h-full">
             <div>
-              <h1 className="text-3xl font-semibold text-gray-800">{product.title}</h1>
+              <h1 className="text-3xl font-semibold text-gray-800">{product.name}</h1>
               <p className="text-xl text-gray-600 mt-4">${product.price}</p>
 
               <p className="text-gray-700 mt-2">{product.description}</p>

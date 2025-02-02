@@ -16,7 +16,7 @@ const ProductListings = () => {
       try {
         const query = `*[_type == "product"]{
           _id,
-          title,
+          name,
           price,
           "image": image.asset->url,
           "slug": slug,
@@ -97,7 +97,7 @@ const ProductListings = () => {
                   {item.image && (
                     <Image
                       src={item.image}
-                      alt={item.title}
+                      alt={item.name}
                       className="w-16 h-16 rounded-lg"
                       width={64}
                       height={64}
@@ -105,7 +105,7 @@ const ProductListings = () => {
                   )}
                   <div className="ml-4">
                     <h3 className="text-md font-semibold text-gray-800">
-                      {item.title}
+                      {item.name}
                     </h3>
                     <p className="text-sm text-purple-500">
                       ${item.price} x {item.quantity}
@@ -131,7 +131,10 @@ const ProductListings = () => {
                 ${calculateTotal().toFixed(2)}
               </span>
             </div>
-            <Link href={"/checkout"} className="bg-gradient-to-r from-purple-500 to-blue-500 text-white py-2 px-4 rounded-lg w-full font-bold hover:opacity-90">
+            <Link
+              href={"/checkout"}
+              className="bg-gradient-to-r from-purple-500 to-blue-500 text-white py-2 px-4 rounded-lg w-full font-bold hover:opacity-90"
+            >
               Proceed to Checkout
             </Link>
           </div>
@@ -142,35 +145,36 @@ const ProductListings = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {products.map((product) => (
           <Link href={`/products/${product.slug.current}`} key={product._id}>
-          <div className="cursor-pointer">
-            {product.image ? (
-              <Image
-                src={product.image}
-                alt={product.title}
-                width={300}
-                height={350}
-                className="w-full h-[300px] sm:h-[350px] md:h-[400px] object-cover mb-4"
-              />
-            ) : (
-              <p className="text-red-500">No Image Available</p>
-            )}
-            <h3 className="text-lg text-gray-800 mb-2">{product.title}</h3>
-            <div className="flex items-center space-x-1">
-              <FaEuroSign className="text-xl text-[#22202E]" />
-              <span className="text-xl">{product.price}</span>
+            <div className="cursor-pointer">
+              {product.image ? (
+                <Image
+                  src={product.image}
+                  alt={product.name}
+                  width={300}
+                  height={350}
+                  className="w-full h-[300px] sm:h-[350px] md:h-[400px] object-cover mb-4"
+                />
+              ) : (
+                <div className="w-full h-[300px] sm:h-[350px] md:h-[400px] bg-gray-200 flex items-center justify-center">
+                  <p className="text-red-500">No Image Available</p>
+                </div>
+              )}
+              <h3 className="text-lg text-gray-800 mb-2">{product.name}</h3>
+              <div className="flex items-center space-x-1">
+                <FaEuroSign className="text-xl text-[#22202E]" />
+                <span className="text-xl">{product.price}</span>
+              </div>
+              <button
+                className="bg-gradient-to-r from-purple-500 to-blue-500 text-white py-2 px-4 rounded-lg mt-4"
+                onClick={(e) => {
+                  e.preventDefault(); // Prevent navigating to product page
+                  addToCart(product);
+                }}
+              >
+                Add to Cart
+              </button>
             </div>
-            <button
-              className="bg-gradient-to-r from-purple-500 to-blue-500 text-white py-2 px-4 rounded-lg mt-4"
-              onClick={(e) => {
-                e.preventDefault(); // Prevent navigating to product page
-                addToCart(product);
-              }}
-            >
-              Add to Cart
-            </button>
-          </div>
-        </Link>
-        
+          </Link>
         ))}
       </div>
 
