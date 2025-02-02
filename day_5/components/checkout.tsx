@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { FaShippingFast, FaCreditCard, FaCheckCircle } from "react-icons/fa"; // Add icons
+import { FaCheckCircle } from "react-icons/fa"; // Add icons
 
 interface CartItem {
   _id: string;

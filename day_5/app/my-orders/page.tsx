@@ -1,21 +1,35 @@
 'use client';
 import { useEffect, useState } from "react";
-import { FaCheckCircle } from "react-icons/fa"; // Add icons
-import { Button } from "@/components/ui/button"; // Assuming you have a button component
-import { useRouter } from "next/navigation"; // Importing useRouter for navigation
+import { FaCheckCircle } from "react-icons/fa";
+import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
+
+// Define types for order items and orders
+interface OrderItem {
+  _id: string;
+  title: string;
+  price: number;
+  quantity: number;
+}
+
+interface Order {
+  id: string;
+  status: string;
+  totalAmount: number;
+  items: OrderItem[];
+}
 
 const MyOrdersPage = () => {
-  const [orders, setOrders] = useState<any[]>([]);
-  const router = useRouter(); // Initialize router for navigation
+  const [orders, setOrders] = useState<Order[]>([]);
+  const router = useRouter();
 
   useEffect(() => {
     const savedOrders = JSON.parse(localStorage.getItem("orders") || "[]");
     setOrders(savedOrders);
   }, []);
 
-  // Function to navigate to the All Products page
   const goToAllProducts = () => {
-    router.push("/allproducts"); // Redirect to the All Products page
+    router.push("/allproducts");
   };
 
   return (
@@ -35,19 +49,23 @@ const MyOrdersPage = () => {
                 <h2 className="text-2xl font-semibold text-gray-800">Order ID: {order.id}</h2>
                 <span
                   className={`px-4 py-2 text-sm font-semibold rounded-full ${
-                    order.status === "Placed" ? "bg-green-100 text-green-600" : "bg-gray-100 text-gray-600"
+                    order.status === "Placed" 
+                      ? "bg-green-100 text-green-600" 
+                      : "bg-gray-100 text-gray-600"
                   }`}
                 >
                   {order.status}
                 </span>
               </div>
 
-              <p className="text-lg font-medium text-gray-600 mb-4">Total Amount: ${order.totalAmount.toFixed(2)}</p>
+              <p className="text-lg font-medium text-gray-600 mb-4">
+                Total Amount: ${order.totalAmount.toFixed(2)}
+              </p>
 
               <div className="border-t border-gray-300 mt-4 pt-4">
                 <h3 className="text-xl font-semibold text-gray-800 mb-4">Items:</h3>
                 <ul className="space-y-4">
-                  {order.items.map((item: any) => (
+                  {order.items.map((item) => (
                     <li
                       key={item._id}
                       className="flex justify-between items-center p-4 bg-gray-50 rounded-lg shadow-sm"
@@ -82,7 +100,9 @@ const MyOrdersPage = () => {
           ))}
         </div>
       ) : (
-        <p className="text-lg text-gray-600 text-center">You don't have any orders yet.</p>
+        <p className="text-lg text-gray-600 text-center">
+          You don&apos;t have any orders yet.
+        </p>
       )}
     </div>
   );
