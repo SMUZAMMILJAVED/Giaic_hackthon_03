@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useEffect, useState } from "react";
@@ -7,10 +6,19 @@ import { FaEuroSign } from "react-icons/fa";
 import { sanityClient } from "../sanity/lib/sanity"; // Ensure the correct path
 import Link from "next/link";
 
-
+// Define a type for the product
+type Product = {
+  _id: string;
+  name: string;
+  price: number;
+  image: string | null;
+  slug: {
+    current: string;
+  };
+};
 
 const CeramicProducts = () => {
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState<Product[]>([]);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -44,25 +52,24 @@ const CeramicProducts = () => {
         {products.length > 0 ? (
           products.map((product) => (
             <Link key={product._id} href={`/products/${product.slug?.current}`}>
-           
-            <div key={product._id} className="bg-white p-4">
-              {product.image ? (
-                <Image
-                  src={product.image}
-                  alt={product.name || "Ceramic Product"}
-                  width={300}
-                  height={350}
-                  className="w-full h-[350px] object-cover mb-4"
-                />
-              ) : (
-                <p className="text-red-500">No Image Available</p>
-              )}
-              <h3 className="text-lg mb-2">{product.name}</h3>
-              <div className="flex items-center space-x-1">
-                <FaEuroSign className="text-xl text-[#22202E]" />
-                <span className="text-xl">{product.price}</span>
+              <div key={product._id} className="bg-white p-4">
+                {product.image ? (
+                  <Image
+                    src={product.image}
+                    alt={product.name || "Ceramic Product"}
+                    width={300}
+                    height={350}
+                    className="w-full h-[350px] object-cover mb-4"
+                  />
+                ) : (
+                  <p className="text-red-500">No Image Available</p>
+                )}
+                <h3 className="text-lg mb-2">{product.name}</h3>
+                <div className="flex items-center space-x-1">
+                  <FaEuroSign className="text-xl text-[#22202E]" />
+                  <span className="text-xl">{product.price}</span>
+                </div>
               </div>
-            </div>
             </Link>
           ))
         ) : (
