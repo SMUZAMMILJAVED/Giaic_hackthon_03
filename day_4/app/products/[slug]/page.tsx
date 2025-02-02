@@ -174,9 +174,9 @@ export default function ProductPage({ params }: ProductPageProps) {
                 ${calculateTotal().toFixed(2)}
               </span>
             </div>
-            <button className="bg-gradient-to-r from-purple-500 to-blue-500 text-white py-2 px-4 rounded-lg w-full font-bold hover:opacity-90">
+            <Link href={"/checkout"} className="bg-gradient-to-r from-purple-500 to-blue-500 text-white py-2 px-4 rounded-lg w-full font-bold hover:opacity-90">
               Proceed to Checkout
-            </button>
+            </Link>
           </div>
         )}
       </div>

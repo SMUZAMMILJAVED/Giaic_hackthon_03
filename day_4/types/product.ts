@@ -1,7 +1,7 @@
 
 export interface Product{
     _id:string;
-    title:string;
+    name:string;
     _type:"product";
     image?:{
         asset:{
