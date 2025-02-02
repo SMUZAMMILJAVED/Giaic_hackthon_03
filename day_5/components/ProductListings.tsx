@@ -5,6 +5,7 @@ import { FaEuroSign, FaTimes, FaTrash } from "react-icons/fa";
 import Link from "next/link";
 import { sanityClient } from "../sanity/lib/sanity"; // Ensure correct path
 import { Product } from "../types/product"; // Import your Product interface
+import { urlFor } from "../sanity/lib/image"; 
 
 const ProductListings = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -18,7 +19,11 @@ const ProductListings = () => {
           _id,
           name,
           price,
-          "image": image.asset->url,
+          image {
+            asset -> {
+              url
+            }
+          },
           "slug": slug,
           description
         }`;
@@ -96,7 +101,7 @@ const ProductListings = () => {
                 <div className="flex items-center">
                   {item.image && (
                     <Image
-                      src={item.image}
+                    src={urlFor(item.image).url()} 
                       alt={item.name}
                       className="w-16 h-16 rounded-lg"
                       width={64}
@@ -148,7 +153,7 @@ const ProductListings = () => {
             <div className="cursor-pointer">
               {product.image ? (
                 <Image
-                  src={product.image}
+                src={urlFor(product.image).url()} 
                   alt={product.name}
                   width={300}
                   height={350}
