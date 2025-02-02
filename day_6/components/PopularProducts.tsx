@@ -6,10 +6,19 @@ import { FaEuroSign } from "react-icons/fa";
 import { sanityClient } from "../sanity/lib/sanity"; // Ensure the correct path
 import Link from "next/link"; // Import Link component for navigation
 
-
+// Define the Product type
+type Product = {
+  _id: string;
+  name: string;
+  price: number;
+  image: string | null;
+  slug: {
+    current: string;
+  };
+};
 
 const PopularProducts = () => {
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState<Product[]>([]); // Explicitly type the state
 
   useEffect(() => {
     const fetchProducts = async () => {
