@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { FaCheckCircle } from "react-icons/fa"; // Add icons
-
+import { sanityClient } from "../sanity/lib/sanity";
 interface CartItem {
   _id: string;
   title: string;
@@ -48,33 +48,74 @@ const CheckoutPage = () => {
   //   localStorage.removeItem("cart"); // Clear cart after order
   //   router.push("/thank-you"); // Redirect to a thank you page
   // };
-  const placeOrder = () => {
+  // const placeOrder = () => {
+  //   if (!billingInfo.fullName || !billingInfo.email || !billingInfo.address) {
+  //     alert("Please fill in all required fields.");
+  //     return;
+  //   }
+  
+  //   // Create the order object
+  //   const order = {
+  //     id: new Date().toISOString(),  // Unique ID for the order
+  //     items: cart,
+  //     billingInfo,
+  //     totalAmount: cart.reduce((total, item) => total + item.price * item.quantity, 0),
+  //     status: "Placed",
+  //   };
+  
+  //   // Store the order in localStorage
+  //   const orders = JSON.parse(localStorage.getItem("orders") || "[]");
+  //   orders.push(order);
+  //   localStorage.setItem("orders", JSON.stringify(orders));
+  
+  //   // Clear cart after order
+  //   localStorage.removeItem("cart");
+  
+  //   // alert("Order placed successfully!");
+  //   router.push("/thank-you"); // Redirect to a thank you page
+  // };
+  
+
+  const placeOrder = async () => {
     if (!billingInfo.fullName || !billingInfo.email || !billingInfo.address) {
       alert("Please fill in all required fields.");
       return;
     }
   
-    // Create the order object
     const order = {
-      id: new Date().toISOString(),  // Unique ID for the order
-      items: cart,
-      billingInfo,
+      _type: "order", // Sanity document type
+      orderId: new Date().toISOString(),
+      items: cart.map(item => ({
+        _type: "orderItem",
+        productId: item._id,
+        title: item.title,
+        price: item.price,
+        quantity: item.quantity,
+      })),
+      billingInfo: {
+        _type: "billingInfo",
+        fullName: billingInfo.fullName,
+        email: billingInfo.email,
+        address: billingInfo.address,
+        city: billingInfo.city,
+        zipCode: billingInfo.zipCode,
+      },
       totalAmount: cart.reduce((total, item) => total + item.price * item.quantity, 0),
       status: "Placed",
     };
   
-    // Store the order in localStorage
-    const orders = JSON.parse(localStorage.getItem("orders") || "[]");
-    orders.push(order);
-    localStorage.setItem("orders", JSON.stringify(orders));
+    try {
+      await sanityClient.create(order);
+      alert("Order placed successfully!");
   
-    // Clear cart after order
-    localStorage.removeItem("cart");
-  
-    // alert("Order placed successfully!");
-    router.push("/thank-you"); // Redirect to a thank you page
+      localStorage.removeItem("cart");
+      router.push("/thank-you");
+    } catch (error) {
+      console.error("Error placing order:", error);
+      alert("Failed to place order. Try again later.");
+    }
   };
-
+  
   return (
     <div className="max-w-4xl mx-auto px-6 py-12">
       <h1 className="text-4xl font-extrabold text-center text-gray-800 mb-8">Checkout</h1>
